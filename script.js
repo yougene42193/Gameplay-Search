@@ -1,7 +1,7 @@
 'use strict';
-const GiantbombKey = '4b9c2a43261b7540c1f412f7e3c3fec306c286a4';
+const GiantbombKey = '';
 
-const YoutubeKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
+const YoutubeKey = '';
 
 const TwitchKey = ' ';
 
