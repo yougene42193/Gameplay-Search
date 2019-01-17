@@ -1,9 +1,9 @@
 'use strict';
-const igdbKey = '';
+const igdbKey = '22a0fa879bc0fc871bcd063a480fe3b0';
 
-const YoutubeKey = '';
+const YoutubeKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
 
-const TwitchKey = ' ';
+const TwitchKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
 
 const igdbSearchURL = 'https://api-v3.igdb.com/games/';
 
@@ -34,19 +34,19 @@ function displayResults(responseJson) {
        <h2>Youtube Videos</h2>
        <div class="youtube-container"> 
          <div class="youtube">
-         <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
          </div>
          <div class="youtube">
-         <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[1].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[1].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
          </div>
          <div class="youtube">
-         <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[2].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[2].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
          </div>
          <div class="youtube">
-         <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[3].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[3].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
          </div>
          <div class="youtube">
-         <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
          </div>
        </div>
      </section>
@@ -54,7 +54,7 @@ function displayResults(responseJson) {
         <h2>Twitch Vids</h2>
         <div class="twitch-container">
             <div class="twitch">
-                <h3>Videos</h3>
+                <iframe class="twitch-video" src="${responseJson[0].streams.preview}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
             </div>
         </div>
      </section>`
@@ -64,7 +64,7 @@ function displayResults(responseJson) {
 
 function getYoutubeVideos(searchTerm) {
   const searchURL = 'https://www.googleapis.com/youtube/v3/search';
-  const apiKey = '';
+  const apiKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
   const params = {
     key: apiKey,
     q: `${searchTerm} gameplay`,
@@ -87,6 +87,32 @@ function getYoutubeVideos(searchTerm) {
     .then(reponseJson => displayResults(reponseJson.items))
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
+    });
+}
+
+function getTwitchVideos(searchTerm) {
+  const searchURL = 'https://api.twitch.tv/kraken/search/streams';
+  const apiKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
+  const params = {
+    client_id: apiKey,
+    query: searchTerm,
+    limit: 5,
+  };
+  const queryString = formatURL(params);
+  const url = searchURL + '?' + queryString;
+
+  console.log(url);
+
+  fetch(url)
+    .then(response => {
+      if(response.ok) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(responseJson => displayResults(responseJson.items))
+    .catch(err => {
+      $('#js-error-message').text(`Something went wrong: ${err.message}`)
     });
 }
 
@@ -118,6 +144,7 @@ function watchForm() {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
     getYoutubeVideos(searchTerm);
+    getTwitchVideos(searchTerm);
     getIGDBResults(searchTerm);
     displayResults();
     

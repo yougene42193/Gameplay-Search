@@ -76,9 +76,12 @@ form {
 }
 
 .youtube {
-    border: 1px solid gray;
     margin-left: 5%;
     margin-right: 5%;
+}
+
+.youtube-video {
+    border: 1px solid gray;
 }
 
 .twitch-container {
