@@ -1,11 +1,10 @@
 'use strict';
-const igdbKey = '22a0fa879bc0fc871bcd063a480fe3b0';
+const GBKey = '4b9c2a43261b7540c1f412f7e3c3fec306c286a4';
 
 const YoutubeKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
 
 const TwitchKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
 
-const igdbSearchURL = 'https://api-v3.igdb.com/games/';
 
 
 
@@ -22,44 +21,50 @@ function formatURL(params) {
   return queryItems.join('&');
 }
 
-function displayResults(responseJson) {
+function displayResults(youtubeJson) {
+  console.log(youtubeJson);
   $('#js-content').html(
     `<section role="region" class="gb-image">
-        <h2>IMAGE</h2>
+        <h2>image</h2>
      </section>
      <section role="region" class="gb-content">
-        <h2>Summary</h2>
+        <h2>summary</h2>
      </section>
      <section role="region" class="yt-videos">
        <h2>Youtube Videos</h2>
-       <div class="youtube-container"> 
-         <div class="youtube">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-         </div>
-         <div class="youtube">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[1].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-         </div>
-         <div class="youtube">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[2].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-         </div>
-         <div class="youtube">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[3].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-         </div>
-         <div class="youtube">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/${responseJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-         </div>
-       </div>
-     </section>
-     <section role="region" class="twitch-videos">
-        <h2>Twitch Vids</h2>
-        <div class="twitch-container">
-            <div class="twitch">
-                <iframe class="twitch-video" src="${responseJson[0].streams.preview}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          <div class="youtube-container"> 
+            <div class="youtube">
+              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
             </div>
+          <div class="youtube">
+              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[1].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          </div>
+            <div class="youtube">
+              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[2].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          </div>
+          <div class="youtube">
+              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[3].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          </div>
+            <div class="youtube">
+              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          </div>
         </div>
-     </section>`
+    </section>
+    `
   );
   hideMainPage();
+}
+
+function displayTwitchResults(twitchJson) {
+  console.log(twitchJson);
+  $('.twitch-videos').append(
+    `<h2>Twitch Vids</h2>
+      <div class="twitch-container">
+        <div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[0].channel.name}" autoplay="false" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+        </div>
+      </div>`
+  );
 }
 
 function getYoutubeVideos(searchTerm) {
@@ -78,24 +83,26 @@ function getYoutubeVideos(searchTerm) {
   console.log(url);
 
   fetch(url)
-    .then(response => {
-      if(response.ok) {
-        return response.json();
+    .then(youtube => {
+      if(youtube.ok) {
+        return youtube.json();
       }
-      throw new Error(response.statusText);
+      throw new Error(youtube.statusText);
     })
-    .then(reponseJson => displayResults(reponseJson.items))
+    .then(youtubeJson => displayResults(youtubeJson.items))
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
 function getTwitchVideos(searchTerm) {
-  const searchURL = 'https://api.twitch.tv/kraken/search/streams';
+  const searchURL = 'https://api.twitch.tv/kraken/streams/';
   const apiKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
   const params = {
     client_id: apiKey,
+    game: searchTerm,
     query: searchTerm,
+    stream_type: 'live',
     limit: 5,
   };
   const queryString = formatURL(params);
@@ -104,29 +111,44 @@ function getTwitchVideos(searchTerm) {
   console.log(url);
 
   fetch(url)
-    .then(response => {
-      if(response.ok) {
-        return response.json();
+    .then(twitch => {
+      if(twitch.ok) {
+        console.log(twitch.json());
+        return twitch.json();
       }
-      throw new Error(response.statusText);
+      throw new Error(twitch.statusText);
     })
-    .then(responseJson => displayResults(responseJson.items))
+    .then(twitchJson => displayTwitchResults(twitchJson.streams))
     .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`)
+      $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
-function getIGDBResults(searchTerm) {
+function getGBResults(searchTerm) {
+  const searchURL = 'https://www.giantbomb.com/api/search/';
+  const apiKey = '4b9c2a43261b7540c1f412f7e3c3fec306c286a4';
+  $.ajax({
+    api_key: apiKey,
+    query: searchTerm,
+    resources: 'game',
+    format: 'jsonp',
+    limit: 1,
+    crossDomain: true,
+    jsonp: 'json_callback',
+    url: searchURL,
+    success: function(data) {
+      console.log(data)
+    }
+  });
   const params = {
-    name: searchTerm,
-    'user-key': igdbKey,
+    
   };
   const queryString = formatURL(params);
-  const igdbURL = igdbSearchURL + '?' + queryString;
+  const GBURL = searchURL + '?' + queryString;
 
-  console.log(igdbURL);
+  console.log(GBURL);
 
-  fetch(igdbURL)
+  fetch(GBURL)
     .then(response => {
       if(response.ok) {
         return response.json();
@@ -145,9 +167,9 @@ function watchForm() {
     const searchTerm = $('#js-search-term').val();
     getYoutubeVideos(searchTerm);
     getTwitchVideos(searchTerm);
-    getIGDBResults(searchTerm);
+    getGBResults(searchTerm);
     displayResults();
-    
+    displayTwitchResults();
   });
 }
 
