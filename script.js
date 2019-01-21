@@ -5,11 +5,6 @@ const YoutubeKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
 
 const TwitchKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
 
-
-
-
-const TwitchSearchURL = 'https://api.twitch.tv/kraken/streams/game';
-
 function hideMainPage() {
   $('h1').css('display', 'none');
   $('form').css('top', '3.5%');
@@ -21,17 +16,24 @@ function formatURL(params) {
   return queryItems.join('&');
 }
 
-function displayResults(youtubeJson) {
+function displayGBResults(result) {
+  console.log(result);
+  return `
+  <div class="gb-items">
+    <div class="gb-image">
+      <img src="${result.image.medium_url}" class="cardImage">
+    </div>
+    <div class="gb-content">
+      <h2 class="description-text">${result.name}</h2>
+      <p class="deck">${result.deck}</p>
+    </div>
+  </div>`;
+}
+
+function displayYoutubeResults(youtubeJson) {
   console.log(youtubeJson);
-  $('#js-content').html(
-    `<section role="region" class="gb-image">
-        <h2>image</h2>
-     </section>
-     <section role="region" class="gb-content">
-        <h2>summary</h2>
-     </section>
-     <section role="region" class="yt-videos">
-       <h2>Youtube Videos</h2>
+  $('.yt-videos').html(
+    `<h2>Youtube Videos</h2>
           <div class="youtube-container"> 
             <div class="youtube">
               <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
@@ -48,16 +50,14 @@ function displayResults(youtubeJson) {
             <div class="youtube">
               <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
           </div>
-        </div>
-    </section>
-    `
+        </div>`
   );
   hideMainPage();
 }
 
 function displayTwitchResults(twitchJson) {
   console.log(twitchJson);
-  $('.twitch-videos').append(
+  $('.twitch-videos').html(
     `<h2>Twitch Vids</h2>
       <div class="twitch-container">
         <div class="twitch">
@@ -78,18 +78,18 @@ function getYoutubeVideos(searchTerm) {
     type: 'video'
   };
   const queryString = formatURL(params);
-  const url = searchURL + '?' + queryString;
+  const ytUrl = searchURL + '?' + queryString;
 
-  console.log(url);
+  console.log(ytUrl);
 
-  fetch(url)
+  fetch(ytUrl)
     .then(youtube => {
       if(youtube.ok) {
         return youtube.json();
       }
       throw new Error(youtube.statusText);
     })
-    .then(youtubeJson => displayResults(youtubeJson.items))
+    .then(youtubeJson => displayYoutubeResults(youtubeJson.items))
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
@@ -103,14 +103,15 @@ function getTwitchVideos(searchTerm) {
     game: searchTerm,
     query: searchTerm,
     stream_type: 'live',
+    format: 'jsonp',
     limit: 5,
   };
   const queryString = formatURL(params);
-  const url = searchURL + '?' + queryString;
+  const twitchUrl = searchURL + '?' + queryString;
 
-  console.log(url);
+  console.log(twitchUrl);
 
-  fetch(url)
+  fetch(twitchUrl)
     .then(twitch => {
       if(twitch.ok) {
         console.log(twitch.json());
@@ -125,40 +126,24 @@ function getTwitchVideos(searchTerm) {
 }
 
 function getGBResults(searchTerm) {
-  const searchURL = 'https://www.giantbomb.com/api/search/';
+  const searchURL = 'https://api.giantbomb.com/games/';
   const apiKey = '4b9c2a43261b7540c1f412f7e3c3fec306c286a4';
   $.ajax({
-    api_key: apiKey,
-    query: searchTerm,
-    resources: 'game',
-    format: 'jsonp',
-    limit: 1,
-    crossDomain: true,
-    jsonp: 'json_callback',
     url: searchURL,
-    success: function(data) {
-      console.log(data)
+    dataType: 'jsonp',
+    data: {
+      api_key: apiKey,
+      format: 'jsonp',
+      json_callback: 'gameCallback',
+      filter: `name:${searchTerm}`,
+      limit: 1
     }
   });
-  const params = {
-    
-  };
-  const queryString = formatURL(params);
-  const GBURL = searchURL + '?' + queryString;
+}
 
-  console.log(GBURL);
-
-  fetch(GBURL)
-    .then(response => {
-      if(response.ok) {
-        return response.json();
-      }
-      throw new Error(response.statusText);
-    })
-    .then(responseJson => displayResults(responseJson))
-    .catch(err => {
-      $('#js-error-msg').text(`Something went wrong: ${err.message}`);
-    });
+function gameCallback(data) {
+  const results = data.results.map((item, index) => displayGBResults(item));
+  $('.gb-info').html(results);
 }
 
 function watchForm() {
@@ -168,7 +153,8 @@ function watchForm() {
     getYoutubeVideos(searchTerm);
     getTwitchVideos(searchTerm);
     getGBResults(searchTerm);
-    displayResults();
+    displayGBResults();
+    displayYoutubeResults();
     displayTwitchResults();
   });
 }
