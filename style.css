@@ -110,6 +110,11 @@ form {
     #js-search-term, #search-button {
         font-size: 20px;
     }
+
+    .youtube-video, .twitch-video {
+        height: 250px;
+        width: 350px;
+    }
 }
 
 @media only screen and (min-width: 1024px) {
@@ -136,8 +141,12 @@ form {
         height: 450px;
     }
 
+    .gb-items {
+        display: flex;
+        margin-bottom: 10%;
+    }
+
     .gb-image {
-        float: left;
         width: 30%;
         height: 450px;
         margin-left: 15%;
@@ -148,19 +157,12 @@ form {
     }
 
     .gb-content {
+        margin-top: 0;
+        margin-left: 5%;
         margin-right: 15%;
         height: 450px;
         width: 70%;
         margin-bottom: 5%;
-        border: none;
-        background-color: white;
-    }
-
-    .youtube-video {
-        width: 350px;
-    }
-
-    .twitch-video {
-        width: 350px;
+        padding: 2%;
     }
 }

@@ -34,7 +34,7 @@ function displayYoutubeResults(youtubeJson) {
   console.log(youtubeJson);
   $('.yt-videos').empty();
   $('.yt-videos').html(
-    `<h2>Youtube Videos</h2>
+    `<h2>Youtube Gameplay Videos</h2>
        <div class="youtube-container">
        </div>`
   );
@@ -45,7 +45,7 @@ function displayYoutubeResults(youtubeJson) {
         </div>`
     );
   }
-  hideMainPage();
+  
 }
 
 function displayTwitchResults(twitchJson) {
@@ -53,7 +53,7 @@ function displayTwitchResults(twitchJson) {
   console.log(twitchJson.length);
   $('.twitch-videos').empty();
   $('.twitch-videos').html(
-    `<h2>Twitch Videos</h2>
+    `<h2>Twitch Live Streams</h2>
      <div class="twitch-container">
      </div>`
   );
@@ -165,6 +165,7 @@ function watchForm() {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
     const maxResult = 5;
+    hideMainPage();
     getGBResults(searchTerm, gameCallback);
     getYoutubeVideos(searchTerm, maxResult);
     getTwitchStreams(searchTerm, maxResult);
