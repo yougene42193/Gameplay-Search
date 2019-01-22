@@ -56,73 +56,28 @@ function displayYoutubeResults(youtubeJson) {
 }
 
 function displayTwitchResults(twitchJson) {
+  console.log('twitch streams displaying');
   console.log(twitchJson);
   $('.twitch-videos').html(
     `<h2>Twitch Vids</h2>
       <div class="twitch-container">
         <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[0].channel.name}" autoplay="false" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[0].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
+        </div>
+        <div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[1].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
+        </div>
+        <div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[2].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
+        </div>
+        <div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[3].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
+        </div>
+        <div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[4].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
         </div>
       </div>`
   );
-}
-
-function getYoutubeVideos(searchTerm) {
-  const searchURL = 'https://www.googleapis.com/youtube/v3/search';
-  const apiKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
-  const params = {
-    key: apiKey,
-    q: `${searchTerm} gameplay`,
-    part: 'snippet',
-    maxResults: 5,
-    type: 'video'
-  };
-  const queryString = formatURL(params);
-  const ytUrl = searchURL + '?' + queryString;
-
-  console.log(ytUrl);
-
-  fetch(ytUrl)
-    .then(youtube => {
-      if(youtube.ok) {
-        return youtube.json();
-      }
-      throw new Error(youtube.statusText);
-    })
-    .then(youtubeJson => displayYoutubeResults(youtubeJson.items))
-    .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
-    });
-}
-
-function getTwitchVideos(searchTerm) {
-  const searchURL = 'https://api.twitch.tv/kraken/streams/';
-  const apiKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
-  const params = {
-    client_id: apiKey,
-    game: searchTerm,
-    query: searchTerm,
-    stream_type: 'live',
-    format: 'jsonp',
-    limit: 5,
-  };
-  const queryString = formatURL(params);
-  const twitchUrl = searchURL + '?' + queryString;
-
-  console.log(twitchUrl);
-
-  fetch(twitchUrl)
-    .then(twitch => {
-      if(twitch.ok) {
-        console.log(twitch.json());
-        return twitch.json();
-      }
-      throw new Error(twitch.statusText);
-    })
-    .then(twitchJson => displayTwitchResults(twitchJson.streams))
-    .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
-    });
 }
 
 function getGBResults(searchTerm) {
@@ -142,20 +97,80 @@ function getGBResults(searchTerm) {
 }
 
 function gameCallback(data) {
-  const results = data.results.map((item, index) => displayGBResults(item));
+  const results = data.results.map((item) => displayGBResults(item));
   $('.gb-info').html(results);
+}
+
+function getYoutubeVideos(searchTerm) {
+  const searchURL = 'https://www.googleapis.com/youtube/v3/search';
+  const apiKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
+  const params = {
+    key: apiKey,
+    q: `${searchTerm} gameplay`,
+    part: 'snippet',
+    maxResults: 5,
+    type: 'video'
+  };
+  const queryString = formatURL(params);
+  const youtubeUrl = searchURL + '?' + queryString;
+
+  console.log(youtubeUrl);
+
+  fetch(youtubeUrl)
+    .then(youtube => {
+      if(youtube.ok) {
+        return youtube.json();
+      }
+      throw new Error(youtube.statusText);
+    })
+    .then(youtubeJson => displayYoutubeResults(youtubeJson.items))
+    .catch(err => {
+      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+    });
+}
+
+function getTwitchStreams(searchTerm) {
+  const searchURL = 'https://api.twitch.tv/kraken/search/streams';
+  const apiKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
+  const params = {
+    game: searchTerm,
+    query: searchTerm,
+    stream_type: 'live',
+    limit: 5,
+  };
+  const options = {
+    method: 'GET',
+    headers: new Headers ({
+      'accept': 'application/json',
+      'Client-ID': apiKey,
+    })
+  };
+  const queryString = formatURL(params);
+  const url = searchURL + '?' + queryString;
+
+  console.log(url);
+
+  fetch(url, options)
+    .then(twitch => {
+      if(twitch.ok){
+        return twitch.json();
+      } else {
+        throw new Error(twitch.statusText);
+      }
+    })
+    .then(twitch => displayTwitchResults(twitch.streams))
+    .catch(e => {
+      console.log(e);
+    });
 }
 
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
-    getYoutubeVideos(searchTerm);
-    getTwitchVideos(searchTerm);
     getGBResults(searchTerm);
-    displayGBResults();
-    displayYoutubeResults();
-    displayTwitchResults();
+    getYoutubeVideos(searchTerm);
+    getTwitchStreams(searchTerm);
   });
 }
 
