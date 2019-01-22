@@ -63,8 +63,9 @@ form {
 
 .gb-content {
     width: 70%;
-    height: 350px;
     margin-top: 10%;
+    margin-bottom: 10%;
+    padding: 5%;
     border: 1px solid black;
     background-color: lightgray;
 }
@@ -90,7 +91,6 @@ form {
 .twitch-container {
     margin-top: 5%;
     width: 70%;
-    height: 200px;
     border: 1px solid black;
     margin-bottom: 10%;
     overflow: scroll;
@@ -148,6 +148,7 @@ form {
     }
 
     .gb-content {
+        margin-right: 15%;
         height: 450px;
         width: 70%;
         margin-bottom: 5%;
@@ -156,6 +157,10 @@ form {
     }
 
     .youtube-video {
+        width: 350px;
+    }
+
+    .twitch-video {
         width: 350px;
     }
 }

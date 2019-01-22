@@ -32,67 +32,63 @@ function displayGBResults(result) {
 
 function displayYoutubeResults(youtubeJson) {
   console.log(youtubeJson);
+  $('.yt-videos').empty();
   $('.yt-videos').html(
     `<h2>Youtube Videos</h2>
-          <div class="youtube-container"> 
-            <div class="youtube">
-              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[0].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-            </div>
-          <div class="youtube">
-              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[1].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-          </div>
-            <div class="youtube">
-              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[2].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-          </div>
-          <div class="youtube">
-              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[3].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-          </div>
-            <div class="youtube">
-              <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[4].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-          </div>
-        </div>`
+       <div class="youtube-container">
+       </div>`
   );
+  for(let i = 0; i < youtubeJson.length; i++) {
+    $('.youtube-container').append(
+      ` <div class="youtube">
+          <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[i].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+        </div>`
+    );
+  }
   hideMainPage();
 }
 
 function displayTwitchResults(twitchJson) {
   console.log('twitch streams displaying');
-  console.log(twitchJson);
+  console.log(twitchJson.length);
+  $('.twitch-videos').empty();
   $('.twitch-videos').html(
-    `<h2>Twitch Vids</h2>
-      <div class="twitch-container">
-        <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[0].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
-        </div>
-        <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[1].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
-        </div>
-        <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[2].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
-        </div>
-        <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[3].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
-        </div>
-        <div class="twitch">
-          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[4].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
-        </div>
-      </div>`
+    `<h2>Twitch Videos</h2>
+     <div class="twitch-container">
+     </div>`
   );
+  for(let i = 0; i < twitchJson.length; i++) {
+    if (twitchJson.length > 0) {
+      $('.twitch-container').append(
+        `<div class="twitch">
+          <iframe class="twitch-video" src="https://player.twitch.tv/?channel=${twitchJson[i].channel.name}&autoplay=false" width="200" height="200" frameborder="0" scrolling="no" allowFullScreen="true"></iframe>
+        </div>`
+      );  
+    } else {
+      $('.twitch-container').append(
+        '<h3>No Results</h3>'
+      );
+    }
+  }
 }
 
-function getGBResults(searchTerm) {
-  const searchURL = 'https://api.giantbomb.com/games/';
+function getGBResults(searchTerm, callback) {
+  const searchURL = 'https://www.giantbomb.com/api/search/';
   const apiKey = '4b9c2a43261b7540c1f412f7e3c3fec306c286a4';
   $.ajax({
     url: searchURL,
-    dataType: 'jsonp',
     data: {
       api_key: apiKey,
+      query: searchTerm,
       format: 'jsonp',
-      json_callback: 'gameCallback',
-      filter: `name:${searchTerm}`,
+      resources: 'game',
       limit: 1
-    }
+    },
+    type: 'GET',
+    dataType: 'jsonp',
+    crossdomain: true,
+    jsonp: 'json_callback',
+    success: callback
   });
 }
 
@@ -101,14 +97,14 @@ function gameCallback(data) {
   $('.gb-info').html(results);
 }
 
-function getYoutubeVideos(searchTerm) {
+function getYoutubeVideos(searchTerm, maxResult) {
   const searchURL = 'https://www.googleapis.com/youtube/v3/search';
   const apiKey = 'AIzaSyCPGJrolRVRl2XdQOfBQ2T__evHvY6iORA';
   const params = {
     key: apiKey,
     q: `${searchTerm} gameplay`,
     part: 'snippet',
-    maxResults: 5,
+    maxResults: maxResult,
     type: 'video'
   };
   const queryString = formatURL(params);
@@ -123,20 +119,20 @@ function getYoutubeVideos(searchTerm) {
       }
       throw new Error(youtube.statusText);
     })
-    .then(youtubeJson => displayYoutubeResults(youtubeJson.items))
+    .then(youtubeJson => displayYoutubeResults(youtubeJson.items, maxResult))
     .catch(err => {
       $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
-function getTwitchStreams(searchTerm) {
+function getTwitchStreams(searchTerm, maxResult) {
   const searchURL = 'https://api.twitch.tv/kraken/search/streams';
   const apiKey = 'kag0cgmqyb5oj3jbqaihjgtdavnqcf';
   const params = {
     game: searchTerm,
     query: searchTerm,
     stream_type: 'live',
-    limit: 5,
+    limit: maxResult,
   };
   const options = {
     method: 'GET',
@@ -158,9 +154,9 @@ function getTwitchStreams(searchTerm) {
         throw new Error(twitch.statusText);
       }
     })
-    .then(twitch => displayTwitchResults(twitch.streams))
-    .catch(e => {
-      console.log(e);
+    .then(twitchJson => displayTwitchResults(twitchJson.streams, maxResult))
+    .catch(err => {
+      $('#js-error-message').text(`Something went wrong: ${err.message}`);
     });
 }
 
@@ -168,9 +164,10 @@ function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
-    getGBResults(searchTerm);
-    getYoutubeVideos(searchTerm);
-    getTwitchStreams(searchTerm);
+    const maxResult = 5;
+    getGBResults(searchTerm, gameCallback);
+    getYoutubeVideos(searchTerm, maxResult);
+    getTwitchStreams(searchTerm, maxResult);
   });
 }
 
