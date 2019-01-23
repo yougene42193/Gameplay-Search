@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bevan|Spectral|Spectral+SC:700" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="script.js"></script>
@@ -13,16 +14,22 @@
 <body>
     <div class="top-bar"></div>
     <header role="banner">
-        <div class="top-head">
-            <h1>Video Game Search</h1>
+        <div class="top-head" aria-live="polite">
+            <h1>Gameplay Search</h1>
         </div>
-        <div class="search">
+        <section role="region" class="landing-page">
+            <h2>Search for a game to get a brief overview and gameplay.</h2>
+        </section>
+        <section role="region" class="search">
             <form>
-                <input type="text" name="search-term" id="js-search-term" placeholder="ex. Final Fantasy VII" required/>
-                <button type="submit" id="search-button"><i class="fa fa-search"></i></button>
+                <fieldset>
+                    <label for="search" class="visuallyhidden">Search: </label>
+                    <input type="text" name="search-term" id="js-search-term" placeholder="ex. Final Fantasy VII" required/>
+                    <button type="submit" id="search-button"><i class="fa fa-search"></i></button>
+                </fieldset>
             </form>
             <p id="js-error-msg" class="err-msg"></p>
-        </div>
+        </section>
     </header>
     <main role="main">
         <div id="js-content">
