@@ -7,6 +7,7 @@ function searchBarChange() {
   $('#js-search-term').css('border', '2px solid black');
   $('.landing-page').css('display', 'none');
   $('form').css('top', '3.75%');
+  $('form').css('position', 'fixed');
 }
 
 function formatURL(params) {

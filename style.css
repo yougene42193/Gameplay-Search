@@ -89,7 +89,7 @@ fieldset {
 }
 
 form {
-    position: fixed;
+    position: flex;
     display:inline;
     top: 50%;
     left: 50%;
