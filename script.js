@@ -1,8 +1,10 @@
 'use strict';
 /*let gbObject = 0;*/
 
-function hideMainPage() {
+function searchBarChange() {
   $('h1').css('display', 'none');
+  $('#search-button').css('border', '2px solid black');
+  $('#js-search-term').css('border', '2px solid black');
   $('.landing-page').css('display', 'none');
   $('form').css('top', '3.75%');
 }
@@ -71,7 +73,7 @@ function displayTwitchResults(twitchJson) {
     }
   } else {
     $('.twitch-container').append(
-      '<h3>No Results</h3>'
+      '<h3>No Live Streams</h3>'
     );
   }
 }
@@ -174,7 +176,7 @@ function watchForm() {
     event.preventDefault();
     const searchTerm = $('#js-search-term').val();
     const maxResult = 5;
-    hideMainPage();
+    searchBarChange();
     getGBResults(searchTerm, gameCallback);
     getYoutubeVideos(searchTerm, maxResult);
     getTwitchStreams(searchTerm, maxResult);
