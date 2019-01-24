@@ -61,31 +61,44 @@ fieldset {
     position: fixed;
     background-color: rgb(255, 153, 0);
     width: 100%;
-    height: 7%;
+    height: 50px;
     top: 0%;
     overflow-x: hidden;
 }
 
 #js-search-term {
+    font-family: 'Spectral SC', serif;
     width: 90%;
-    background-color: white;
+    background-color: rgb(255, 232, 155);
     border: 2px solid rgb(255, 153, 0);
-    border-radius: 5px;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    border-radius: 50px;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     -moz-box-shadow:    inset 0 0 10px #000000;
     -webkit-box-shadow: inset 0 0 10px #000000;
     box-shadow:         inset 0 0 10px #000000;
 }
 
 #search-button {
-    margin-left: -20px;
+    margin-left: -40px;
     padding-top: 5px;
     padding-bottom: 5px;
-    border-radius: 5px;
-    background-color: white;
-    border: 2px solid rgb(255, 153, 0);
+    border-radius: 20px;
+    background: rgb(255, 153, 0);
+    border:none;
+    box-shadow: 0 0 10px #000000;
+    transition-property: background;
+    transition-duration: 1s;
+    transition-timing-function: linear;
+}
+
+#search-button:active {
+    transform: translateY(2px);
+}
+
+#search-button:hover {
+    background: #eeff00;
 }
 
 form {
@@ -127,7 +140,7 @@ form {
     overflow: scroll;
     display: flex;
     margin-bottom: 5%;
-    background-color: rgb(255, 153, 0);
+    background-color: rgb(255, 180, 67);
     -moz-box-shadow:    inset 0 0 20px #000000;
     -webkit-box-shadow: inset 0 0 20px #000000;
     box-shadow:         inset 0 0 20px #000000;
@@ -150,7 +163,7 @@ form {
     margin-bottom: 10%;
     overflow: scroll;
     display: flex;
-    background-color: rgb(255, 153, 0);
+    background-color: rgb(255, 180, 67);
     -moz-box-shadow:    inset 0 0 20px #000000;
     -webkit-box-shadow: inset 0 0 20px #000000;
     box-shadow:         inset 0 0 20px #000000;
@@ -170,8 +183,20 @@ form {
         width: 60%;
     }
 
+    .top-bar {
+        height: 70px;
+    }
+
+    #js-search-term {
+        margin-top: 20px;
+    }
+
     #js-search-term, #search-button {
         font-size: 20px;
+    }
+
+    #search-button {
+        margin-left: -50px;
     }
 
     .youtube-video, .twitch-video {
@@ -191,8 +216,18 @@ form {
         width: 70%;
     }
 
+    #js-search-term {
+        padding-left: 25px;
+    }
+
     #js-search-term, #search-button {
         font-size: 25px;
+    }
+
+    #search-button {
+        padding-left: 7px;
+        padding-right: 7px;
+        margin-left: -55px;
     }
 
     #js-content {

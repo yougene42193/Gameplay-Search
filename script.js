@@ -3,11 +3,11 @@
 
 function searchBarChange() {
   $('h1').css('display', 'none');
-  $('#search-button').css('border', '2px solid black');
   $('#js-search-term').css('border', '2px solid black');
   $('.landing-page').css('display', 'none');
-  $('form').css('top', '3.75%');
+  $('form').css('top', '27px');
   $('form').css('position', 'fixed');
+  $('form').css('width', '90%');
 }
 
 function formatURL(params) {
@@ -181,6 +181,7 @@ function watchForm() {
     getGBResults(searchTerm, gameCallback);
     getYoutubeVideos(searchTerm, maxResult);
     getTwitchStreams(searchTerm, maxResult);
+    $('#js-search-term').val('');
   });
 }
 
