@@ -31,4 +31,4 @@ Video Results:
 
 404 Errors From Twitch.tv
 
-![404-twitch](Images/404-errors-from-twitch.JPG)
+![404-twitch](Images/404-Errors-From-Twitch.JPG)
