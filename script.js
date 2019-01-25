@@ -1,6 +1,7 @@
 'use strict';
 /*let gbObject = 0;*/
 
+//moves the search bar up to the top after initial search
 function searchBarChange() {
   $('h1').css('display', 'none');
   $('#js-search-term').css('border', '2px solid black');
@@ -36,7 +37,6 @@ function displayGBResults(result) {
   </div>`;
 }
 
-
 function displayYoutubeResults(youtubeJson) {
   console.log(youtubeJson);
   $('.yt-videos').empty();
@@ -45,14 +45,19 @@ function displayYoutubeResults(youtubeJson) {
        <div class="youtube-container">
        </div>`
   );
-  for(let i = 0; i < youtubeJson.length; i++) {
+  if (youtubeJson.length > 0) {
+    for(let i = 0; i < youtubeJson.length; i++) {
+      $('.youtube-container').append(
+        ` <div class="youtube">
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[i].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
+          </div>`
+      );
+    }
+  } else {
     $('.youtube-container').append(
-      ` <div class="youtube">
-          <iframe class="youtube-video" src="https://www.youtube.com/embed/${youtubeJson[i].id.videoId}" allow="autoplay" encrypted-media" width="200" height="200" frameborder="0" allowFullScreen></iframe>
-        </div>`
+      '<h3>No Videos Available</h3>'
     );
   }
-  
 }
 
 function displayTwitchResults(twitchJson) {
@@ -105,7 +110,14 @@ function getGBResults(searchTerm, callback) {
 
 function gameCallback(data) {
   const results = data.results.map((item) => displayGBResults(item));
-  $('.gb-info').html(results);
+  if (results.length === 0) {
+    $('.gb-info').html(
+      '<h3>No Images and Content</h3>'
+    );
+  } else {
+    $('.gb-info').html(results);
+  }
+  console.log(results);
 }
 
 function getYoutubeVideos(searchTerm, maxResult) {
@@ -132,7 +144,7 @@ function getYoutubeVideos(searchTerm, maxResult) {
     })
     .then(youtubeJson => displayYoutubeResults(youtubeJson.items, maxResult))
     .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+      $('#js-error-msg').text(`Something went wrong: ${err.message}`);
     });
 }
 
@@ -168,7 +180,7 @@ function getTwitchStreams(searchTerm, maxResult) {
     })
     .then(twitchJson => displayTwitchResults(twitchJson.streams, maxResult))
     .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+      $('#js-error-msg').text(`Something went wrong: ${err.message}`);
     });
 }
 

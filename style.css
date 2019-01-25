@@ -25,7 +25,7 @@ body::-webkit-scrollbar-track {
 }
  
 body::-webkit-scrollbar-thumb {
-  background-color: rgb(255, 153, 0);
+    background-color: rgb(255, 153, 0);
 }
 
 h1 {
@@ -39,6 +39,7 @@ h2 {
 }
 
 h3 {
+    font-family: 'Spectral', serif;
     color: black;
 }
 
@@ -131,11 +132,15 @@ form {
     font-size: 30px;
 }
 
+#js-content h3 {
+    color: red;
+    font-size: 24px;
+}
+
 .cardImage {
     width: 70%;
     height: 90%;
-    border: 2px solid gray;
-    box-shadow: 0 8px 6px -6px gray;
+    border: 2px solid rgb(61, 61, 61);
 }
 
 .gb-content {
@@ -144,7 +149,7 @@ form {
     margin-bottom: 10%;
     padding: 5%;
     color: black;
-    border: 2px solid gray;
+    border: 2px solid rgb(61, 61, 61);
     background-color: rgb(255, 180, 67);
     -moz-box-shadow:    inset 0 0 20px #000000;
     -webkit-box-shadow: inset 0 0 20px #000000;
@@ -171,7 +176,7 @@ form {
 
 .youtube-video {
     margin-top: 3.5px;
-    border: 1px solid gray;
+    border: 1px solid rgb(61, 61, 61);
     box-shadow: 0 0 10px #000000;
 }
 
@@ -195,7 +200,7 @@ form {
 
 .twitch-video {
     margin-top: 3.5px;
-    border: 1px solid gray;
+    border: 1px solid rgb(61, 61, 61);
     box-shadow: 0 0 10px #000000;
 }
 
@@ -269,7 +274,7 @@ form {
     .cardImage {
         width: 350px;
         height: 450px;
-        border: 5px solid gray;
+        border: 5px solid rgb(61, 61, 61);
     }
 
     .gb-items {
@@ -287,6 +292,10 @@ form {
         font-size: 20px;
     }
 
+    #js-content h2 {
+        font-size: 36px;
+    }
+
     .gb-content {
         font-size: 20px;
         margin-top: 0;
@@ -296,10 +305,9 @@ form {
         width: 70%;
         margin-bottom: 10px;
         padding: 2%;
-        border: 5px solid gray;
+        border: 5px solid rgb(61, 61, 61);
     }
 
-    
     .youtube-container::-webkit-scrollbar {
         width: 1em;
     }   
