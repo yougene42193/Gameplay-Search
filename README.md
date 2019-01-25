@@ -22,3 +22,13 @@ Video Results:
 * CSS
 * Javascript
 * jQuery
+## Know Issues
+404 errors from the twitch API
+
+404 Errors
+
+![404-errors](Images/404-errors.JPG)
+
+404 Errors From Twitch.tv
+
+![404-twitch](Images/404-errors-from-twitch.JPG)
