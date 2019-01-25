@@ -1,5 +1,4 @@
 'use strict';
-/*let gbObject = 0;*/
 
 //moves the search bar up to the top after initial search
 function searchBarChange() {
@@ -18,13 +17,6 @@ function formatURL(params) {
 }
 
 function displayGBResults(result) {
-  console.log(result);
-  /*gbObject = result.results.length;
-  if (result.results.length === 0) {
-    gbObject = 0;
-    console.log('no results');
-  } else {
-    gbObject = 1;*/
   return `
   <div class="gb-items">
     <div class="gb-image">
@@ -38,7 +30,6 @@ function displayGBResults(result) {
 }
 
 function displayYoutubeResults(youtubeJson) {
-  console.log(youtubeJson);
   $('.yt-videos').empty();
   $('.yt-videos').html(
     `<h2>Youtube Gameplay Videos</h2>
@@ -61,8 +52,6 @@ function displayYoutubeResults(youtubeJson) {
 }
 
 function displayTwitchResults(twitchJson) {
-  console.log('twitch streams displaying');
-  console.log(twitchJson);
   $('.twitch-videos').empty();
   $('.twitch-videos').html(
     `<h2>Twitch Live Streams</h2>
@@ -117,7 +106,6 @@ function gameCallback(data) {
   } else {
     $('.gb-info').html(results);
   }
-  console.log(results);
 }
 
 function getYoutubeVideos(searchTerm, maxResult) {
@@ -132,9 +120,7 @@ function getYoutubeVideos(searchTerm, maxResult) {
   };
   const queryString = formatURL(params);
   const youtubeUrl = searchURL + '?' + queryString;
-  /*console.log(gbObject);*/
-  console.log(youtubeUrl);
-  /*if (gbObject === 1) {*/
+  
   fetch(youtubeUrl)
     .then(youtube => {
       if(youtube.ok) {
@@ -167,8 +153,6 @@ function getTwitchStreams(searchTerm, maxResult) {
   };
   const queryString = formatURL(params);
   const url = searchURL + '?' + queryString;
-
-  console.log(url);
 
   fetch(url, options)
     .then(twitch => {
