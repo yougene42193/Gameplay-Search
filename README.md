@@ -1,1 +1,2 @@
-# Video Game API Capstone
+# Gameplay Search
+# Summary
