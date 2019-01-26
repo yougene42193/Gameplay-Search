@@ -21,7 +21,7 @@ Video Results:
 * HTML
 * CSS
 * Javascript
-* jQuery
+* jQuery/Ajax
 ## Know Issues
 404 errors from the twitch API
 
