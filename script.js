@@ -24,7 +24,7 @@ function displayGBResults(result) {
     </div>
     <div class="gb-content">
       <h2 class="description-text">${result.name}</h2>
-      <p class="deck">${result.deck}</p>
+      <p class="deck">${result.deck ? result.deck : 'Sorry, no description available for this game.'}</p>
     </div>
   </div>`;
 }
